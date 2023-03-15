@@ -54,16 +54,89 @@ void min_heapify( heap_t * h, int index ){
 
 }
 
+//checks if the node is a leaf
 int is_leaf ( node_t * root ){
 
-    return !( root->left ) && !( root->right) ;
+    return !( root->left ) && !( root->right ) ;
 
 }
 
+//checks if the heap is size 1
 int is_size_one ( heap_t * h ) {
 
-    return ( h->size == 1);
+    return ( h->size == 1 );
 
+}
+//extracts a node with minimal value
+node_t * min_node_extract ( heap_t * heap ){
+
+    node_t * temp = heap->array[0];
+    heap->array[0] = heap->array[heap->size - 1];
+ 
+    --heap->size;
+    min_heapify( heap, 0 ) ;
+ 
+    return temp;
+
+}
+//inserts a new node to heap
+void insert_node( heap_t * heap, node_t * node ){
+ 
+    ++heap->size;
+    int i = heap->size - 1;
+ 
+    while ( i && ( node->frequency < heap->array[( i - 1 ) / 2]->frequency ) ) {
+ 
+        heap->array[i] = heap->array[( i - 1 ) / 2];
+        i = ( i - 1 ) / 2;
+    }
+ 
+    heap->array[i] = node;
+
+}
+//builds heap
+void build_heap( heap_t * heap ){
+ 
+    int n = heap->size - 1;
+    int i;
+ 
+    for ( i = ( n - 1 ) / 2; i >= 0; --i )
+        min_heapify( heap, i );
+}
+//creates a heap with capacity of size and inserts all data to heap
+heap_t * create_build_heap( char data[], int freq[], int size ){
+ 
+    heap_t * heap = create_minheap(size);
+ 
+    for ( int i = 0; i < size; ++i) 
+        heap->array[i] = new_node(data[i], freq[i]);
+ 
+    heap->size = size;
+    build_heap( heap );
+ 
+    return heap;
+}
+//builds a tree
+node_t * build_huffman_tree( char data[], int freq[], int size)
+{
+    node_t * left, * right, * father;
+
+    heap_t * heap = create_build_heap( data, freq, size );
+ 
+    while ( !isSizeOne( heap ) ) {
+ 
+        left = min_node_extract( heap );
+        right = min_node_extract( heap );
+ 
+        father = new_node( '$', left->frequency + right->frequency );
+ 
+        father->left = left;
+        father->right = right;
+ 
+        insert_node( heap, father );
+    }
+    
+    return min_node_extract( heap );
 }
 
 /*combines two node_ts into one
