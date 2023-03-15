@@ -16,6 +16,11 @@ main (int argc, char **argv)
     int print_info = 0;
     char * prog_name = argv[0];
 
+    char * buffer;
+    long filelen;
+
+    int freq[256] = {0};
+
     while ( ( opt = getopt( argc, argv, "i:o:a" ) ) != -1 ) {
         switch( opt ) {
         case 'i':
@@ -59,12 +64,24 @@ main (int argc, char **argv)
       exit( EXIT_FAILURE );
     }
 
+    fseek( inf, 0, SEEK_END );          
+    filelen = ftell( inf );             
+    rewind( inf );                      
+
+    buffer = (char*)malloc( filelen * sizeof(char) ); 
+    fread( buffer, filelen, 1, inf ); 
+    fclose( inf );
+
+    for( int i = 0; i < filelen; i++ ){
+        freq[( buffer[i] + 256 ) % 256]++;
+    }
+
     FILE * ouf = fopen( out_name, "wb" );
     if( ouf == NULL ) {
       fprintf( stderr, "%s: can not write output file: %s\n\n", argv[0], out_name );
       exit( EXIT_FAILURE );
     }
 
-    fclose( inf );
+    
     fclose( ouf );
 }
