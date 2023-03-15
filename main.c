@@ -5,7 +5,7 @@
 char * usage =
   "Usage: %s [options] -i input_file -o output_file \n"
   "     List of options:\n"
-  "         * -a - print additional info into stdout; \n";
+  "         * -a - print additional info into stdout; \n\n";
 
 int
 main (int argc, char **argv)
@@ -40,4 +40,31 @@ main (int argc, char **argv)
 		fprintf( stderr, usage, prog_name );
 		exit( EXIT_FAILURE );
 	}
+    
+    if( in_name == NULL ){
+        fprintf( stderr, "\n%s: input file name not given! please specify the name! \n\n", argv[0] );
+        fprintf( stderr, usage, prog_name );
+        exit( EXIT_FAILURE );
+    }
+
+    if( out_name == NULL ){
+        fprintf( stderr, "\n%s: output file name not given! please specify the name! \n\n", argv[0] );
+        fprintf( stderr, usage, prog_name );
+        exit( EXIT_FAILURE );
+    }
+
+    FILE * inf = fopen( in_name, "rb" );
+    if( inf == NULL ) {
+      fprintf( stderr, "%s: can not read input file: %s\n\n", argv[0], in_name );
+      exit( EXIT_FAILURE );
+    }
+
+    FILE * ouf = fopen( out_name, "wb" );
+    if( ouf == NULL ) {
+      fprintf( stderr, "%s: can not write output file: %s\n\n", argv[0], out_name );
+      exit( EXIT_FAILURE );
+    }
+
+    fclose( inf );
+    fclose( ouf );
 }
