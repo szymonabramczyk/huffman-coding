@@ -2,7 +2,6 @@
 #include <stdlib.h>
 #include "heap.h"
 
-//creates a new node_t
 node_t * new_node_t( char data, long frequency ) {
 
     node_t * temp = ( node_t* ) malloc( sizeof(node_t) );
@@ -15,7 +14,6 @@ node_t * new_node_t( char data, long frequency ) {
 
 }
 
-//creates a heap
 heap_t * create_minheap( long capacity ){
 
     heap_t * heap = ( heap_t* ) malloc( sizeof( heap_t ) );
@@ -27,10 +25,9 @@ heap_t * create_minheap( long capacity ){
     return heap;
 }
 
-//swaps two nodes
-void swap_nodes( node_t ** a, node_t ** b){
+void swap_nodes( node_t * a, node_t * b){
 
-    node_t ** temp = * a;
+    node_t * temp =  a;
     * a = * b;
     * b = * temp;
 }
@@ -54,20 +51,18 @@ void min_heapify( heap_t * h, int index ){
 
 }
 
-//checks if the node is a leaf
 int is_leaf ( node_t * root ){
 
     return !( root->left ) && !( root->right ) ;
 
 }
 
-//checks if the heap is size 1
 int is_size_one ( heap_t * h ) {
 
     return ( h->size == 1 );
 
 }
-//extracts a node with minimal value
+
 node_t * min_node_extract ( heap_t * heap ){
 
     node_t * temp = heap->array[0];
@@ -79,7 +74,7 @@ node_t * min_node_extract ( heap_t * heap ){
     return temp;
 
 }
-//inserts a new node to heap
+
 void insert_node( heap_t * heap, node_t * node ){
  
     ++heap->size;
@@ -94,7 +89,7 @@ void insert_node( heap_t * heap, node_t * node ){
     heap->array[i] = node;
 
 }
-//builds heap
+
 void build_heap( heap_t * heap ){
  
     int n = heap->size - 1;
@@ -103,7 +98,7 @@ void build_heap( heap_t * heap ){
     for ( i = ( n - 1 ) / 2; i >= 0; --i )
         min_heapify( heap, i );
 }
-//creates a heap with capacity of size and inserts all data to heap
+
 heap_t * create_build_heap( char data[], int freq[], int size ){
  
     heap_t * heap = create_minheap(size);

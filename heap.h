@@ -22,7 +22,7 @@ node_t * new_node( char data, long frequency );
 
 heap_t * create_minheap( long capacity );
 
-void swap_nodes( node_t ** a, node_t ** b);
+void swap_nodes( node_t * a, node_t * b);
 
 void min_heapify( heap_t * h, int index );
 
