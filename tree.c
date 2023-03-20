@@ -3,12 +3,11 @@
 #include "tree.h"
 #include "heap.h"
 
-//builds a tree
-node_t * build_huffman_tree( char data[], int freq[], int size)
+node_t * build_huffman_tree( int freq[], int n_freq )
 {
     node_t * left, * right, * father;
 
-    heap_t * heap = create_build_heap( data, freq, size );
+    heap_t * heap = create_build_heap( freq, n_freq );
  
     while ( !isSizeOne( heap ) ) {
  

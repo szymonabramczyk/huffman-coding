@@ -14,22 +14,22 @@ node_t * new_node_t( char data, long frequency ) {
 
 }
 
-heap_t * create_minheap( long capacity ){
+heap_t * create_minheap( int capacity ){
 
     heap_t * heap = ( heap_t* ) malloc( sizeof( heap_t ) );
 
     heap->size = 0;
     heap->capacity = capacity;
-    heap->array = ( node_t** ) malloc( heap->capacity * sizeof(node_t*));
+    heap->array = ( node_t** ) malloc( heap->capacity * sizeof( node_t* ) );
 
     return heap;
 }
 
-void swap_nodes( node_t * a, node_t * b){
+void swap_nodes( node_t ** a, node_t ** b ){
 
-    node_t * temp =  a;
+    node_t * temp = * a;
     * a = * b;
-    * b = * temp;
+    * b = temp;
 }
 
 void min_heapify( heap_t * h, int index ){
@@ -99,14 +99,21 @@ void build_heap( heap_t * heap ){
         min_heapify( heap, i );
 }
 
-heap_t * create_build_heap( char data[], int freq[], int size ){
+heap_t * create_build_heap( int freq[], int n_freq ){
+    
+    int capacity = 0;
+
+    for ( int i = 0; i < n_freq; i++ ){
+        if ( freq[i] != 0 )
+            capacity++;
+    }
+    
+    heap_t * heap = create_minheap( capacity );
  
-    heap_t * heap = create_minheap(size);
+    for ( int j = 0; j < capacity; j++ ) 
+        heap->array[j] = new_node( j, freq[j]);
  
-    for ( int i = 0; i < size; ++i) 
-        heap->array[i] = new_node(data[i], freq[i]);
- 
-    heap->size = size;
+    heap->size = capacity;
     build_heap( heap );
  
     return heap;
