@@ -5,8 +5,8 @@
 typedef struct e {
 
     char data;
-    long frequency;
-    struct e *father, *left, *right;
+    int frequency;
+    struct e * left, * right;
 
 } node_t;
 

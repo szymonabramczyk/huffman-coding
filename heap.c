@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include "heap.h"
 
-node_t * new_node_t( char data, long frequency ) {
+node_t * new_node( char data, long frequency ) {
 
     node_t * temp = ( node_t* ) malloc( sizeof(node_t) );
 
@@ -16,11 +16,11 @@ node_t * new_node_t( char data, long frequency ) {
 
 heap_t * create_minheap( int capacity ){
 
-    heap_t * heap = ( heap_t* ) malloc( sizeof( heap_t ) );
+    heap_t * heap = ( heap_t * ) malloc( sizeof( heap_t ) );
 
     heap->size = 0;
     heap->capacity = capacity;
-    heap->array = ( node_t** ) malloc( heap->capacity * sizeof( node_t* ) );
+    heap->array = ( node_t ** ) malloc( heap->capacity * sizeof( node_t * ) );
 
     return heap;
 }
@@ -110,8 +110,12 @@ heap_t * create_build_heap( int freq[], int n_freq ){
     
     heap_t * heap = create_minheap( capacity );
  
-    for ( int j = 0; j < capacity; j++ ) 
-        heap->array[j] = new_node( j, freq[j]);
+    int j = 0;
+    for ( int i = 0; i < n_freq; i++ ){
+
+        if( freq[i] != 0 )
+            heap->array[j++] = new_node( i, freq[i] );
+    }
  
     heap->size = capacity;
     build_heap( heap );
