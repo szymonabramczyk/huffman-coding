@@ -2,6 +2,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#include "heap.h"
+#include "tree.h"
+#include "codes.h"
+
 char * usage =
   "Usage: %s [options] -i input_file -o output_file \n"
   "     List of options:\n"
@@ -74,6 +78,18 @@ main (int argc, char **argv)
 
     for( int i = 0; i < filelen; i++ ){
         freq[( buffer[i] + 256 ) % 256]++;
+    }
+
+    node_t * tree = build_huffman_tree( freq, 256 );
+
+    char * codes[256] = {0};
+    int top = 0;
+    char code[] = "";
+    assign_codes( codes, tree, code, top );
+    
+    for( int i = 0; i < 256; i++ ){
+        if( codes[i] != 0 )
+            printf( "%d: %s\n", i, codes[i]);
     }
 
     FILE * ouf = fopen( out_name, "wb" );
