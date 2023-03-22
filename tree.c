@@ -9,7 +9,7 @@ node_t * build_huffman_tree( int freq[], int n_freq )
 
     heap_t * heap = create_build_heap( freq, n_freq );
  
-    while ( !isSizeOne( heap ) ) {
+    while ( !is_size_one( heap ) ) {
  
         left = min_node_extract( heap );
         right = min_node_extract( heap );
