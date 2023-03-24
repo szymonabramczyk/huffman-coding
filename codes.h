@@ -5,4 +5,8 @@
 
 void assign_codes( char * codes[], node_t * node, char code[], int n );
 
+void write_bit( FILE * ouf, char b );
+
+void encode_file( unsigned char * buffer, int filelen, FILE * ouf, char * codes[] );
+
 #endif
