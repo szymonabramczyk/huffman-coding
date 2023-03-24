@@ -1,10 +1,13 @@
 #include <getopt.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 #include "heap.h"
 #include "tree.h"
 #include "codes.h"
+
+
 
 char * usage =
   "Usage: %s [options] -i input_file -o output_file \n"
@@ -20,7 +23,7 @@ main (int argc, char **argv)
     int print_info = 0;
     char * prog_name = argv[0];
 
-    char * buffer;
+    unsigned char * buffer;
     long filelen;
 
     int freq[256] = {0};
@@ -72,12 +75,16 @@ main (int argc, char **argv)
     filelen = ftell( inf );             
     rewind( inf );                      
 
-    buffer = (char*)malloc( filelen * sizeof(char) ); 
+    buffer = (unsigned char*)malloc( filelen * sizeof(char) ); 
     fread( buffer, filelen, 1, inf ); 
     fclose( inf );
 
+    for( int i = 0; i < filelen; i++ )
+        printf( "%d%d ", i, buffer[i] );
+    printf("\n");
+
     for( int i = 0; i < filelen; i++ ){
-        freq[( buffer[i] + 256 ) % 256]++;
+        freq[ buffer[i] ]++;
     }
 
     node_t * tree = build_huffman_tree( freq, 256 );
@@ -88,8 +95,8 @@ main (int argc, char **argv)
     assign_codes( codes, tree, code, top );
     
     for( int i = 0; i < 256; i++ ){
-        if( codes[i] != 0 )
-            printf( "%d: %s\n", i, codes[i]);
+        if( freq[i] != 0 )
+            printf( "%d: \t %d %s\n", i, freq[i], codes[i]);
     }
 
     FILE * ouf = fopen( out_name, "wb" );
@@ -97,6 +104,8 @@ main (int argc, char **argv)
       fprintf( stderr, "%s: can not write output file: %s\n\n", argv[0], out_name );
       exit( EXIT_FAILURE );
     }
+
+    encode_file( buffer, filelen, ouf, codes );
 
     
     fclose( ouf );

@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include "heap.h"
 
-node_t * new_node( char data, long frequency ) {
+node_t * new_node( unsigned char data, long frequency ) {
 
     node_t * temp = ( node_t* ) malloc( sizeof(node_t) );
 
