@@ -4,7 +4,7 @@
 
 typedef struct e {
 
-    char data;
+    unsigned char data;
     int frequency;
     struct e * left, * right;
 
@@ -18,7 +18,7 @@ typedef struct h {
 
 } heap_t;
 
-node_t * new_node( char data, long frequency );
+node_t * new_node( unsigned char data, long frequency );
 
 heap_t * create_minheap( int capacity );
 
