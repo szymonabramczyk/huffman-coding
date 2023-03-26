@@ -8,7 +8,7 @@ void assign_codes( char * codes[], node_t * node, char code[], int n ){
 
     if( is_leaf( node ) ){
         code[n] = 0;
-        codes[(node->data+256)%256] = strdup( code );
+        codes[node->data] = strdup( code );
     }
 
     if( node->left ){
@@ -41,6 +41,23 @@ void write_bit( FILE * ouf, char bit ){
 	}
 }
 
+void encode_tree ( FILE * ouf, node_t * node ){
+
+    if ( is_leaf( node ) ){
+        write_bit( ouf, '1');
+        char tmp = node->data;
+        for (int j = 0; j < 8; j++) {
+            write_bit( ouf, !!((tmp << j) & 0x80) + '0');
+        }
+    }
+    else
+    {
+        write_bit( ouf, '0');
+        encode_tree( ouf, node->left );
+        encode_tree( ouf, node->right );
+    }
+}
+
 void encode_file( unsigned char * buffer, int filelen, FILE * ouf, char * codes[] ){
 
 	byte_val = 0;
@@ -48,15 +65,11 @@ void encode_file( unsigned char * buffer, int filelen, FILE * ouf, char * codes[
 	num_bytes = 0;
 
 	for( int i = 0; i < filelen; i++ ){
-        //printf("%d ", i);
-
         char * s = codes[ buffer[i] ];
         while( *s ){
             write_bit ( ouf, *s );
-            //printf ( "%c", *s );
             s++;
         }
-        //printf("\n");
 	}
 
 	while( num_bits ) 
