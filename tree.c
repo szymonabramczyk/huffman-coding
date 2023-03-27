@@ -4,6 +4,8 @@
 #include "tree.h"
 #include "heap.h"
 
+#define MAX_LEVELS 256
+
 node_t * build_huffman_tree( int freq[], int n_freq )
 {
     node_t * left, * right, * father;
@@ -27,9 +29,7 @@ node_t * build_huffman_tree( int freq[], int n_freq )
 }
 
 void print_subtree( node_t * root, int indent, int is_right ) {
-    bool * right = malloc( 256 * sizeof( bool ) );
-    for( int i = 0; i < 256; i++ )
-        right[i] = 0;
+    static bool right[MAX_LEVELS] = {0};
     
     right[indent] = is_right;
 
