@@ -5,4 +5,8 @@
 
 node_t * build_huffman_tree( int freq[], int n_freq );
 
+void print_subtree( node_t * root, int indent, int is_left );
+
+void print_tree( node_t * root );
+
 #endif

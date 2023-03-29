@@ -14,7 +14,7 @@ char * usage =
   "         * -t - print frequencies table into stdout\n\n";
 
 int
-main (int argc, char **argv)
+main ( int argc, char **argv )
 {
     int opt;
     char * in_name = NULL;
@@ -22,6 +22,7 @@ main (int argc, char **argv)
     int out_name_given = 0;
     char print_info = 0;
     char print_table = 0;
+    char print_graphic_tree = 0;
     char * prog_name = argv[0];
 
     unsigned char * buffer;
@@ -29,7 +30,7 @@ main (int argc, char **argv)
 
     int freq[256] = {0};
 
-    while ( ( opt = getopt( argc, argv, "i:o:at" ) ) != -1 ) {
+    while ( ( opt = getopt( argc, argv, "i:o:aft" ) ) != -1 ) {
         switch( opt ) {
         case 'i':
             in_name = optarg;
@@ -41,22 +42,25 @@ main (int argc, char **argv)
         case 'a':
             print_info = 1;
             break;
-        case 't':
+        case 'f':
             print_table = 1;
+            break;
+        case 't':
+            print_graphic_tree = 1;
             break;
         default:                   
             fprintf( stderr, usage, prog_name );
             exit( EXIT_FAILURE );
         }
     }
-	if( optind < argc ) {
-		fprintf( stderr, "\nBad parameters!\n" );
-		for( ; optind < argc; optind++ )
-			fprintf( stderr, "\t\"%s\"\n", argv[optind] );
-		fprintf( stderr, "\n" );
-		fprintf( stderr, usage, prog_name );
-		exit( EXIT_FAILURE );
-	}
+    if( optind < argc ) {
+        fprintf( stderr, "\nBad parameters!\n" );
+        for( ; optind < argc; optind++ )
+            fprintf( stderr, "\t\"%s\"\n", argv[optind] );
+        fprintf( stderr, "\n" );
+        fprintf( stderr, usage, prog_name );
+        exit( EXIT_FAILURE );
+    }
     
     if( in_name == NULL ){
         fprintf( stderr, "\n%s: input file name not given! please specify the name! \n\n", argv[0] );
@@ -86,7 +90,7 @@ main (int argc, char **argv)
     filelen = ftell( inf );             
     rewind( inf );                      
 
-    buffer = (unsigned char*)malloc( filelen * sizeof(char) ); 
+    buffer = ( unsigned char* )malloc( filelen * sizeof( char ) ); 
     fread( buffer, filelen, 1, inf ); 
     fclose( inf );
 
@@ -100,18 +104,23 @@ main (int argc, char **argv)
     int top = 0;
     char code[] = "";
     node_t * tree_tmp = tree;
+    node_t * tree_tmp_graphic = tree;
     assign_codes( codes, tree, code, top );
     
     int leaves_num = 0;
 
     if( print_table ){
-        printf( "byte\tfreq\tcode\n");
+        printf( "byte\tfreq\tcode\n" );
     }
     for( int i = 0; i < 256; i++ ){
         if( freq[i] != 0 ){
             leaves_num++;
-            if( print_table ) printf( "%d: \t %d\t%s\n", i, freq[i], codes[i]);
+            if( print_table ) printf( "%d: \t %d\t%s\n", i, freq[i], codes[i] );
         }
+    }
+
+    if( print_graphic_tree ){
+        print_tree( tree_tmp_graphic );
     }
 
     FILE * ouf = fopen( out_name, "wb" );
@@ -120,7 +129,7 @@ main (int argc, char **argv)
       exit( EXIT_FAILURE );
     }
 
-    fputc( (char)(leaves_num - 1), ouf );
+    fputc( ( char )( leaves_num - 1 ), ouf );
 
     encode_tree( ouf, tree_tmp );
 
