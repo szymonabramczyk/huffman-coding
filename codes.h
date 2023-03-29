@@ -11,4 +11,8 @@ void encode_tree ( FILE * ouf, node_t * node );
 
 void encode_file( unsigned char * buffer, int filelen, FILE * ouf, char * codes[] );
 
+void finish_file( FILE * ouf );
+
+void print_compression_ratio( int filelen );
+
 #endif

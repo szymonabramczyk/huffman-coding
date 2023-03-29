@@ -23,7 +23,7 @@ void assign_codes( char * codes[], node_t * node, char code[], int n ){
 
 }
 
-int num_bits, byte_val, num_bytes;
+int num_bits = 0, byte_val = 0, num_bytes = 0;
 
 void write_bit( FILE * ouf, char bit ){
 
@@ -60,10 +60,6 @@ void encode_tree ( FILE * ouf, node_t * node ){
 
 void encode_file( unsigned char * buffer, int filelen, FILE * ouf, char * codes[] ){
 
-	byte_val = 0;
-	num_bits = 0;
-	num_bytes = 0;
-
 	for( int i = 0; i < filelen; i++ ){
         char * s = codes[ buffer[i] ];
         while( *s ){
@@ -71,9 +67,26 @@ void encode_file( unsigned char * buffer, int filelen, FILE * ouf, char * codes[
             s++;
         }
 	}
-
-	while( num_bits ) 
-        write_bit( ouf, '0' );
 }
 
+void finish_file( FILE * ouf ){
 
+    int m = 0;
+    while( num_bits ){
+        write_bit( ouf, '0' );
+        m++;
+    }
+
+    fseek( ouf, 0, SEEK_SET );
+    fputc( m, ouf );
+}
+
+void print_compression_ratio( int filelen ){
+
+    double ratio = (double)num_bytes/filelen;
+    printf("Compression ratio: %.2f%% \n", ratio*100 );
+
+    if( ratio > 1 ){
+        printf("WARNING! The output file is larger than the original file. The compression isn\'t profitable!\n");
+    }
+}
