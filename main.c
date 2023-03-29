@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <stdbool.h>
 
 #include "heap.h"
 #include "tree.h"
@@ -11,7 +12,8 @@ char * usage =
   "Usage: %s [options] -i input_file [-o output_file] \n"
   "     List of options:\n"
   "         * -a - print additional info into stdout;\n"
-  "         * -t - print frequencies table into stdout\n\n";
+  "         * -f - print frequencies table into stdout;\n"
+  "         * -t - print huffman tree into stdout;\n\n";
 
 int
 main ( int argc, char **argv )
@@ -19,10 +21,10 @@ main ( int argc, char **argv )
     int opt;
     char * in_name = NULL;
     char * out_name = NULL;
-    int out_name_given = 0;
-    char print_info = 0;
-    char print_table = 0;
-    char print_graphic_tree = 0;
+    bool out_name_given = 0;
+    bool print_info = 0;
+    bool print_table = 0;
+    bool print_graphic_tree = 0;
     char * prog_name = argv[0];
 
     unsigned char * buffer;
@@ -129,11 +131,17 @@ main ( int argc, char **argv )
       exit( EXIT_FAILURE );
     }
 
+    fputc( 0, ouf );
+
     fputc( ( char )( leaves_num - 1 ), ouf );
 
     encode_tree( ouf, tree_tmp );
 
     encode_file( buffer, filelen, ouf, codes );
+
+    finish_file( ouf );
+
+    print_compression_ratio( filelen );
 
     if( !out_name_given ) free( out_name );
     free( buffer );
