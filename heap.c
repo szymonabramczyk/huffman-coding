@@ -122,3 +122,8 @@ heap_t * create_build_heap( int freq[], int n_freq ){
  
     return heap;
 }
+
+void free_heap( heap_t * h ){
+    free( h->array );
+    free( h );
+}

@@ -104,9 +104,10 @@ main ( int argc, char **argv )
 
     char * codes[256] = {0};
     int top = 0;
-    char code[] = "";
-    node_t * tree_tmp = tree;
+    char code[256];
+    node_t * tree_tmp_encode = tree;
     node_t * tree_tmp_graphic = tree;
+    node_t * tree_tmp_free = tree;
     assign_codes( codes, tree, code, top );
     
     int leaves_num = 0;
@@ -135,7 +136,7 @@ main ( int argc, char **argv )
 
     fputc( ( char )( leaves_num - 1 ), ouf );
 
-    encode_tree( ouf, tree_tmp );
+    encode_tree( ouf, tree_tmp_encode );
 
     encode_file( buffer, filelen, ouf, codes );
 
@@ -145,6 +146,13 @@ main ( int argc, char **argv )
 
     if( !out_name_given ) free( out_name );
     free( buffer );
+
+    free_tree( tree_tmp_free );
+
+    for( int i = 0; i < 256; i++ ){
+        if( freq[i] != 0 )
+            free( codes[i] );
+    }
     
     fclose( ouf );
 }

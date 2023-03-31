@@ -24,8 +24,9 @@ node_t * build_huffman_tree( int freq[], int n_freq )
  
         insert_node( heap, father );
     }
-    
-    return min_node_extract( heap );
+    node_t * tmp = min_node_extract( heap );
+    free_heap( heap );
+    return tmp;
 }
 
 void print_subtree( node_t * root, int indent, int is_left ) {
@@ -72,4 +73,12 @@ void print_tree( node_t * root ) {
         print_subtree( root->right,  0, 0 );
         print_subtree( root->left, 0, 1 );
     }
+}
+
+void free_tree( node_t * root ){
+    if( root->left )
+        free_tree( root->left );
+    if( root->right )
+        free_tree( root->right );
+    free( root );
 }

@@ -38,5 +38,6 @@ void build_heap( heap_t * heap );
 
 heap_t * create_build_heap( int freq[], int n_freq );
 
+void free_heap( heap_t * h );
 
 #endif

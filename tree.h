@@ -9,4 +9,6 @@ void print_subtree( node_t * root, int indent, int is_left );
 
 void print_tree( node_t * root );
 
+void free_tree( node_t * root );
+
 #endif
