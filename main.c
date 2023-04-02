@@ -76,21 +76,48 @@ main ( int argc, char **argv )
       exit( EXIT_FAILURE );
     }
 
+    char * ext = NULL;
     if( out_name == NULL ){
-        char * temp = strtok( in_name, "." );
-        if( (out_name = malloc( ( strlen( temp ) + 5 ) * sizeof(char) ) ) == NULL ){
+        char * temp;
+        char * name = malloc( strlen( in_name ) * sizeof(char) );
+        
+        int ind = 0;
+        if( ( ext = strrchr( in_name, '.' ) ) == NULL ){
+            printf("WARNING! The input file has no extension!\n");
+        }
+        else{
+            if( strcmp( ext, "huff" ) == 0 ){
+                fprintf( stderr, "%s: input file name \"%s\" has .huff extension\n\n", argv[0], in_name );
+                exit( EXIT_FAILURE );
+            }
+            ext++;
+            ind = (int)(ext - in_name);
+            strncpy(name, in_name, ind - 1);
+        }
+
+        if( (out_name = malloc( ( strlen( ind != 0 ? name : in_name ) + 6 ) * sizeof(char) ) ) == NULL ){
             fprintf( stderr, "%s: failed to allocate memory for output file name\n\n", argv[0] );
             exit( EXIT_FAILURE );
         }
-        if( sprintf( out_name, "%s.huff", temp ) == 0 ){
+        if( sprintf( out_name, "%s.huff", ind != 0 ? name : in_name ) == 0 ){
             fprintf( stderr, "%s: failed to save output file name\n\n", argv[0] );
             exit( EXIT_FAILURE );
         }
+        
+        free( name );
+
     }
 
     fseek( inf, 0, SEEK_END );          
     filelen = ftell( inf );             
-    rewind( inf );                      
+    rewind( inf );  
+
+    if( filelen == 0 ){
+        fprintf( stderr, "%s: the input file is empty!\n\n", argv[0] );
+        exit( EXIT_FAILURE );
+    }                    
+   
+    printf( "Output file name: %s\n", out_name );
 
     buffer = ( unsigned char* )malloc( filelen * sizeof( char ) ); 
     fread( buffer, filelen, 1, inf ); 
@@ -136,6 +163,11 @@ main ( int argc, char **argv )
 
     fputc( ( char )( leaves_num - 1 ), ouf );
 
+    if( ext != NULL){
+        fputs( ext, ouf );
+    }
+    fputc( '/', ouf );
+
     encode_tree( ouf, tree_tmp_encode );
 
     encode_file( buffer, filelen, ouf, codes );
@@ -144,7 +176,9 @@ main ( int argc, char **argv )
 
     print_compression_ratio( filelen );
 
-    if( !out_name_given ) free( out_name );
+    if( !out_name_given ){
+        free( out_name );
+    }
     free( buffer );
 
     free_tree( tree_tmp_free );
