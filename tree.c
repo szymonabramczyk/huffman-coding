@@ -50,12 +50,12 @@ void print_subtree( node_t * root, int indent, int is_left ) {
     
     //current level
     if( left[i] ){
-        printf( "(0)" );
+        printf( "(0)[%d]", root->frequency );
         if( is_leaf( root ) )
             printf( "%d", root->data );
         printf( "\n" );
     } else {
-        printf( "(1)" );
+        printf( "(1)[%d]", root->frequency );
         if( is_leaf( root ) )
             printf( "%d", root->data );
         printf( "\n" );
@@ -69,7 +69,7 @@ void print_subtree( node_t * root, int indent, int is_left ) {
 
 void print_tree( node_t * root ) {
     if( root != NULL ) {
-        printf( "Huffman tree:\n*\n");
+        printf( "Huffman tree:\n*\n[%d]\n*\n", root->frequency );
         print_subtree( root->right,  0, 0 );
         print_subtree( root->left, 0, 1 );
     }
