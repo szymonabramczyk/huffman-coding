@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+
 #include "heap.h"
 
 node_t * new_node( unsigned char data, long frequency ) {

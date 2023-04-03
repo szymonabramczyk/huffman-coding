@@ -1,7 +1,6 @@
 #ifndef _HEAP_H
 #define _HEAP_H
 
-
 typedef struct e {
 
     unsigned char data;
