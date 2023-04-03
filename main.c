@@ -11,7 +11,6 @@
 char * usage =
   "Usage: %s [options] -i input_file [-o output_file] \n"
   "     List of options:\n"
-  "         * -a - print additional info into stdout;\n"
   "         * -f - print frequencies table into stdout;\n"
   "         * -t - print huffman tree into stdout;\n\n";
 
@@ -22,7 +21,6 @@ main ( int argc, char **argv )
     char * in_name = NULL;
     char * out_name = NULL;
     bool out_name_given = 0;
-    bool print_info = 0;
     bool print_table = 0;
     bool print_graphic_tree = 0;
     char * prog_name = argv[0];
@@ -32,7 +30,7 @@ main ( int argc, char **argv )
 
     int freq[256] = {0};
 
-    while ( ( opt = getopt( argc, argv, "i:o:aft" ) ) != -1 ) {
+    while ( ( opt = getopt( argc, argv, "i:o:ft" ) ) != -1 ) {
         switch( opt ) {
         case 'i':
             in_name = optarg;
@@ -40,9 +38,6 @@ main ( int argc, char **argv )
         case 'o':
             out_name = optarg;
             out_name_given = 1;
-            break;
-        case 'a':
-            print_info = 1;
             break;
         case 'f':
             print_table = 1;
@@ -103,7 +98,7 @@ main ( int argc, char **argv )
             fprintf( stderr, "%s: failed to save output file name\n\n", argv[0] );
             exit( EXIT_FAILURE );
         }
-        
+
         free( name );
 
     }
